@@ -39,13 +39,13 @@ Vagrant.configure(2) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine
+    vb.gui = true
+  
+      # Customize the amount of memory on the VM:
+     vb.memory = "2048"
+  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -62,11 +62,23 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
    sudo apt-get update
+   sudo apt-get install unzip
    sudo apt-get -qqy install default-jdk
+   
    cd /vagrant
    mkdir doc
+   cd doc/
    wget http://russianaicup.ru/s/1447111844991/assets/documentation/coderacing2015-docs.pdf
    cd ../
+   mkdir Runner
+   cd Runner/
+   wget http://russianaicup.ru/s/1447403014432/assets/local-runner/local-runner.zip
+   unzip local-runner.zip
+   sudo rm -f local-runner.zip
+   cd ../
+   wget http://russianaicup.ru/s/1447403014432/assets/cgdks/python3-cgdk.zip
+   unzip python3-cgdk.zip
+   sudo rm -f python3-cgdk.zip
    
   SHELL
 end

@@ -68,11 +68,11 @@ Vagrant.configure(2) do |config|
    cd /vagrant
    mkdir doc
    cd doc/
-   wget http://russianaicup.ru/s/1447111844991/assets/documentation/coderacing2015-docs.pdf
+   wget http://russianaicup.ru/s/1447602757641/assets/documentation/coderacing2015-docs.pdf
    cd ../
    mkdir Runner
    cd Runner/
-   wget http://russianaicup.ru/s/1447403014432/assets/local-runner/local-runner.zip
+   wget http://russianaicup.ru/s/1447602757641/assets/local-runner/local-runner.zip
    unzip local-runner.zip
    sudo rm -f local-runner.zip
    cd ../

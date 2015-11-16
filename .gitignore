@@ -89,6 +89,9 @@ DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
 
+# Vagrant config
+.vagrant
+
 # Click-Once directory
 publish/
 

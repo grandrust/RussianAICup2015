@@ -25,4 +25,14 @@ do
     files="$files $i"
 done
 
+for i in GranDrust/*.cs
+do
+    files="$files $i"
+done
+
+for i in GranDrust/Factories/*.cs
+do
+    files="$files $i"
+done
+
 dmcs -define:ONLINE_JUDGE -o+ -sdk:4 -out:$name.exe -debug $files 2>compilation.log

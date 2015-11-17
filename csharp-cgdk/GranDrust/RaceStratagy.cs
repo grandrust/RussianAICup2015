@@ -12,37 +12,38 @@ namespace GranDrust
             double nextWaypointX = (self.NextWaypointX + 0.5D) * game.TrackTileSize;
             double nextWaypointY = (self.NextWaypointY + 0.5D) * game.TrackTileSize;
             var cornerTileOffset = 0.3D * game.TrackTileSize;
-
+         
             switch (world.TilesXY[self.NextWaypointX][self.NextWaypointY])
             {
                 case TileType.LeftTopCorner:
                     nextWaypointX += cornerTileOffset;
                     nextWaypointY += cornerTileOffset;
+                    //speedModule = self.SpeedY;
                     break;
                 case TileType.RightTopCorner:
                     nextWaypointX -= cornerTileOffset;
                     nextWaypointY += cornerTileOffset;
+                    //speedModule = self.SpeedX;
                     break;
                 case TileType.RightBottomCorner:
                     nextWaypointX -= cornerTileOffset;
                     nextWaypointY -= cornerTileOffset;
+                    //speedModule = self.SpeedY;
                     break;
                 case TileType.LeftBottomCorner:
                     nextWaypointX += cornerTileOffset;
                     nextWaypointY -= cornerTileOffset;
+                    //speedModule = self.SpeedX;
                     break;
             }
 
             double angleToWaypoint = self.GetAngleTo(nextWaypointX, nextWaypointY);
             double speedModule = Math.Sqrt(self.SpeedX * self.SpeedX + self.SpeedY * self.SpeedY);
 
-            move.WheelTurn = angleToWaypoint * 32.0D / Math.PI;
+            move.WheelTurn = angleToWaypoint * 60.0D / Math.PI;
             move.EnginePower = 1.0D;
 
-            if (world.Tick == 180)
-                move.WheelTurn = 0.0d;
-
-            if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 3.0D * 2.5D * Math.PI)
+            if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 30.0D * Math.PI)
             {
                 move.IsBrake = true;
             }

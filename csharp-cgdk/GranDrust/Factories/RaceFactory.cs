@@ -6,22 +6,22 @@ namespace GranDrust.Factories
 {
     public class RaceFactory
     {
-        static RaceStratagy _strategy;
-        public static RaceStratagy GetRaceStratagy(Car car)
-        {
-            if (_strategy != null)
-                return _strategy;
+        //static RaceStratagy _strategy;
+        //public static RaceStratagy GetRaceStratagy(Car car)
+        //{
+        //    if (_strategy != null)
+        //        return _strategy;
 
-            switch (car.Type)
-            {
-                case CarType.Buggy:
-                case CarType.Jeep:
-                default: 
-                    _strategy = new RaceStratagy();
-                    break;
-            }
+        //    switch (car.Type)
+        //    {
+        //        case CarType.Buggy:
+        //        case CarType.Jeep:
+        //        default: 
+        //            _strategy = new RaceStratagy();
+        //            break;
+        //    }
 
-            return _strategy;
-        }
+        //    return _strategy;
+        //}
     }
 }

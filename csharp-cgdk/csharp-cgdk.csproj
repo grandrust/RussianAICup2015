@@ -70,7 +70,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GranDrust\Factories\RaceFactory.cs" />
-    <Compile Include="GranDrust\RaceStratagy.cs" />
+    <Compile Include="GranDrust\FSM\FollowTo.cs" />
+    <Compile Include="GranDrust\FSM\IState.cs" />
+    <Compile Include="GranDrust\FSM\Seek.cs" />
+    <Compile Include="GranDrust\GameEntities\Baggy.cs" />
+    <Compile Include="GranDrust\GameEntities\Vehicle.cs" />
+    <Compile Include="GranDrust\Helpers\MovementHelper.cs" />
+    <Compile Include="GranDrust\Helpers\Point.cs" />
     <Compile Include="Model\Bonus.cs" />
     <Compile Include="Model\BonusType.cs" />
     <Compile Include="Model\Car.cs" />

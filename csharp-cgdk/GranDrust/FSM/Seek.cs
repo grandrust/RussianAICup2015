@@ -7,10 +7,32 @@ namespace GranDrust.FSM
 {
     public class Seek: IState
     {
+        private Seek()
+        {
+        }
+
+        private static Seek _instantce;
+        public static Seek Instance
+        {
+            get { return _instantce ?? (_instantce = new Seek()); }
+        }
+
         public void Execute(Vehicle vehicle)
         {
             var target = Find(vehicle);
-            var stratagy = new FollowTo { TargetPoint = target};
+
+            //temp impl
+            if (vehicle.World.TilesXY[vehicle.Self.NextWaypointX][vehicle.Self.NextWaypointY] == TileType.LeftTopCorner)
+            {
+                var state = Arrive.Instance;
+                state.TargetPoint = target;
+                vehicle.State = state;
+                state.Execute(vehicle);
+                return;
+            }
+
+            var stratagy = FollowTo.Instance;
+            stratagy.TargetPoint = target;
 
             stratagy.Execute(vehicle);
         }
@@ -18,7 +40,7 @@ namespace GranDrust.FSM
         private Point Find(Vehicle vehicle)
         {
             var nextWaypointXIndex = vehicle.Self.NextWaypointX;
-            var nextWaypointYIndex = vehicle.Self.NextWaypointX;
+            var nextWaypointYIndex = vehicle.Self.NextWaypointY;
 
             double nextWaypointX = (nextWaypointXIndex + 0.5D) * vehicle.Game.TrackTileSize;
             double nextWaypointY = (nextWaypointYIndex + 0.5D) * vehicle.Game.TrackTileSize;
@@ -40,6 +62,11 @@ namespace GranDrust.FSM
                     break;
                 case TileType.LeftBottomCorner:
                     nextWaypointX += cornerTileOffset;
+                    nextWaypointY -= cornerTileOffset;
+                    break;
+
+                case TileType.Vertical:
+                    nextWaypointX = vehicle.Self.X;
                     nextWaypointY -= cornerTileOffset;
                     break;
             }

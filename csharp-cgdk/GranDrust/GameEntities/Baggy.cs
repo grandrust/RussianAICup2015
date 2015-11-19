@@ -11,7 +11,7 @@ namespace GranDrust.GameEntities
         {
         }
 
-        private static IState _state = new Seek();
+        private static IState _state = Seek.Instance;
         public override IState State
         {
             get { return _state; }

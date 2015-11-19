@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GranDrust\Factories\RaceFactory.cs" />
+    <Compile Include="GranDrust\FSM\Arrive.cs" />
     <Compile Include="GranDrust\FSM\FollowTo.cs" />
     <Compile Include="GranDrust\FSM\IState.cs" />
     <Compile Include="GranDrust\FSM\Seek.cs" />

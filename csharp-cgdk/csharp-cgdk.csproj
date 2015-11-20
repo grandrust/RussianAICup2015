@@ -73,9 +73,12 @@
     <Compile Include="GranDrust\FSM\Arrive.cs" />
     <Compile Include="GranDrust\FSM\FollowTo.cs" />
     <Compile Include="GranDrust\FSM\IState.cs" />
+    <Compile Include="GranDrust\FSM\ITargetState.cs" />
     <Compile Include="GranDrust\FSM\Seek.cs" />
     <Compile Include="GranDrust\GameEntities\Baggy.cs" />
+    <Compile Include="GranDrust\GameEntities\Map.cs" />
     <Compile Include="GranDrust\GameEntities\Vehicle.cs" />
+    <Compile Include="GranDrust\Helpers\GameHelper.cs" />
     <Compile Include="GranDrust\Helpers\MovementHelper.cs" />
     <Compile Include="GranDrust\Helpers\Point.cs" />
     <Compile Include="Model\Bonus.cs" />

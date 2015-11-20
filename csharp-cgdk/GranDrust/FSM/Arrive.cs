@@ -5,9 +5,9 @@ using GranDrust.Helpers;
 // ReSharper disable once CheckNamespace
 namespace GranDrust.FSM
 {
-    public class Arrive: IState
+    public class Arrive: ITargetState
     {
-        private const double DECELERATION = 0.3D;
+        private const double Deceleration = 0.3D;
         public Point TargetPoint { get; set; }
 
         private Arrive()
@@ -23,7 +23,7 @@ namespace GranDrust.FSM
         {
             var distance = vehicle.Self.GetDistanceTo(TargetPoint);
 
-            if (distance < 300)
+            if (distance < vehicle.Self.Height * 0.5D) //TODO: fix it
             {
                 vehicle.State = Seek.Instance;
                 vehicle.State.Execute(vehicle);
@@ -32,7 +32,7 @@ namespace GranDrust.FSM
 
             var speedModule = vehicle.Self.SpeedModule();
 
-            var speed = distance/DECELERATION;
+            var speed = distance*Deceleration;
             speed = Math.Min(speed, speedModule);
             var nextPoint = vehicle.Self.NextPoint();
 
@@ -41,7 +41,7 @@ namespace GranDrust.FSM
             vehicle.Move.WheelTurn = angleToWaypoint * 32.0D / Math.PI;
             vehicle.Move.EnginePower = speed / speedModule;
 
-            if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 2.5D*2.5D * Math.PI)
+            if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 9.5D * Math.PI)
             {
                 vehicle.Move.IsBrake = true;
             }

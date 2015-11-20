@@ -5,7 +5,7 @@ using GranDrust.Helpers;
 // ReSharper disable once CheckNamespace
 namespace GranDrust.FSM
 {
-    public class FollowTo : IState
+    public class FollowTo : ITargetState
     {
         public Point TargetPoint { get; set; }
 
@@ -21,8 +21,8 @@ namespace GranDrust.FSM
 
         public void Execute(Vehicle vehicle)
         {
-            double angleToWaypoint = vehicle.Self.GetAngleTo(TargetPoint.X, TargetPoint.Y);
-            double speedModule = vehicle.Self.SpeedModule();
+            var angleToWaypoint = vehicle.Self.GetAngleTo(TargetPoint.X, TargetPoint.Y);
+            var speedModule = vehicle.Self.SpeedModule();
 
             vehicle.Move.WheelTurn = angleToWaypoint * 32.0D / Math.PI;
             vehicle.Move.EnginePower = 1.0D;

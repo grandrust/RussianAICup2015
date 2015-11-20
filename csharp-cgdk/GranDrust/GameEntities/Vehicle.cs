@@ -7,19 +7,21 @@ namespace GranDrust.GameEntities
     public abstract class Vehicle
     {
         public Move Move { get; private set; }
-        
+        public Map Map { get; set; }
+
         public Game Game { get; private set; }
 
         public World World { get; private set; }
         
         public Car Self { get; private set; }
 
-        protected Vehicle(Car self, World world, Game game, Move move)
+        protected Vehicle(Car self, World world, Game game, Move move, Map map = null)
         {
             Self = self;
             World = world;
             Game = game;
             Move = move;
+            Map = map;
         }
 
         public virtual IState State { get; set; }

@@ -59,21 +59,6 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-   sudo apt-get update
-   sudo apt-get install unzip
-   sudo apt-get -qqy install default-jdk
-   
-   cd /vagrant
-   mkdir doc
-   cd doc/
-   wget http://russianaicup.ru/s/1447697214093/assets/documentation/coderacing2015-docs.pdf
-   cd ../
-   mkdir Runner
-   cd Runner/
-   wget http://russianaicup.ru/s/1447697214093/assets/local-runner/local-runner.zip
-   unzip local-runner.zip
-   sudo rm -f local-runner.zip
-   
-  SHELL
+  config.vm.provision :shell, path "bootstrap.sh"
+  
 end

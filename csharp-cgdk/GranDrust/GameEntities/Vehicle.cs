@@ -1,5 +1,5 @@
 using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
-using GranDrust.FSM;
+using GranDrust.FSM.States;
 
 // ReSharper disable once CheckNamespace
 namespace GranDrust.GameEntities

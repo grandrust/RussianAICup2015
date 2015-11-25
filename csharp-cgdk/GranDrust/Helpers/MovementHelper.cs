@@ -23,6 +23,13 @@ namespace GranDrust.Helpers
             return Math.Sqrt(xRange * xRange + yRange * yRange);
         }
 
+        public static double GetDistance(double x1, double y1, double x2, double y2)
+        {
+            double xRange = x1 - x2;
+            double yRange = y1 - y2;
+            return Math.Sqrt(xRange * xRange + yRange * yRange);
+        }
+
         public static double GetAngleTo(this Car car, Point target)
         {
             return car.GetAngleTo(target.X, target.Y);

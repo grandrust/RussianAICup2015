@@ -70,13 +70,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GranDrust\Factories\RaceFactory.cs" />
-    <Compile Include="GranDrust\FSM\Arrive.cs" />
-    <Compile Include="GranDrust\FSM\FollowTo.cs" />
-    <Compile Include="GranDrust\FSM\InitialState.cs" />
-    <Compile Include="GranDrust\FSM\StateBase.cs" />
-    <Compile Include="GranDrust\FSM\ITargetState.cs" />
-    <Compile Include="GranDrust\FSM\Seek.cs" />
-    <Compile Include="GranDrust\FSM\TargetState.cs" />
+    <Compile Include="GranDrust\FSM\States\Arrive.cs" />
+    <Compile Include="GranDrust\FSM\States\FollowTo.cs" />
+    <Compile Include="GranDrust\FSM\States\InitialState.cs" />
+    <Compile Include="GranDrust\FSM\States\Reversal.cs" />
+    <Compile Include="GranDrust\FSM\States\StateBase.cs" />
+    <Compile Include="GranDrust\FSM\States\ITargetState.cs" />
+    <Compile Include="GranDrust\FSM\States\Seek.cs" />
+    <Compile Include="GranDrust\FSM\States\TargetState.cs" />
     <Compile Include="GranDrust\GameEntities\Baggy.cs" />
     <Compile Include="GranDrust\GameEntities\Map.cs" />
     <Compile Include="GranDrust\GameEntities\Vehicle.cs" />

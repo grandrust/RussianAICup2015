@@ -1,13 +1,12 @@
 ﻿using System;
-using System.CodeDom;
 
 // ReSharper disable once CheckNamespace
 namespace GranDrust.Helpers
 {
     public struct Point : IEquatable<Point>
     {
-        public double X;
-        public double Y;
+        public double X { get; set; }
+        public double Y { get; set; }
 
         private const double TOLERANCE = 0.001;
 
@@ -19,7 +18,7 @@ namespace GranDrust.Helpers
 
         public override string ToString()
         {
-            return string.Format("{0},{1}", X, Y);
+            return $"{X},{Y}";
         }
 
         public Point(double x, double y)

@@ -8,8 +8,8 @@ namespace GranDrust.GameEntities
     {
         private class WayPointNode
         {
-            private int _x;
-            private int _y;
+            private readonly int _x;
+            private readonly int _y;
 
             public bool IsMe(int x, int y)
             {

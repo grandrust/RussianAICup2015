@@ -8,7 +8,7 @@
     <ProjectGuid>{9C830E12-33C9-429B-914E-BBDAA478D495}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk</RootNamespace>
+    <RootNamespace>GranDrust</RootNamespace>
     <AssemblyName>csharp-cgdk</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -72,9 +72,11 @@
     <Compile Include="GranDrust\Factories\RaceFactory.cs" />
     <Compile Include="GranDrust\FSM\Arrive.cs" />
     <Compile Include="GranDrust\FSM\FollowTo.cs" />
-    <Compile Include="GranDrust\FSM\IState.cs" />
+    <Compile Include="GranDrust\FSM\InitialState.cs" />
+    <Compile Include="GranDrust\FSM\StateBase.cs" />
     <Compile Include="GranDrust\FSM\ITargetState.cs" />
     <Compile Include="GranDrust\FSM\Seek.cs" />
+    <Compile Include="GranDrust\FSM\TargetState.cs" />
     <Compile Include="GranDrust\GameEntities\Baggy.cs" />
     <Compile Include="GranDrust\GameEntities\Map.cs" />
     <Compile Include="GranDrust\GameEntities\Vehicle.cs" />
@@ -128,6 +130,10 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

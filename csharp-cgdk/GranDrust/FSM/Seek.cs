@@ -1,11 +1,15 @@
-﻿using GranDrust.GameEntities;
+﻿using System;
+using GranDrust.GameEntities;
 using GranDrust.Helpers;
 
 // ReSharper disable once CheckNamespace
 namespace GranDrust.FSM
 {
-    public class Seek: IState
+    public class Seek : StateBase
     {
+        private ITargetState _state;
+        private Point _target;
+
         private Seek()
         {
         }
@@ -16,15 +20,33 @@ namespace GranDrust.FSM
             get { return _instantce ?? (_instantce = new Seek()); }
         }
 
-        public void Execute(Vehicle vehicle)
+        public override void Enter(Vehicle vehicle)
         {
-            var target = Find(vehicle);
-            ITargetState state = vehicle.NextTile() != vehicle.CurrentTile()
+            _target = Find(vehicle);
+
+            var previousState = vehicle.PreviousState as ITargetState;
+            if (previousState != null)
+            {
+                if (_target == previousState.TargetPoint)
+                {
+                    _target = vehicle.Map.GetNextPoint(vehicle.Self.NextWaypointIndex + 1);
+                }
+            }
+        }
+
+        public override void Execute(Vehicle vehicle)
+        {
+            _state = vehicle.NextTile() != vehicle.CurrentTile() //TODO: not true for T and crossroad use distance and angle
                 ? (ITargetState)Arrive.Instance
                 : FollowTo.Instance;
 
-            state.TargetPoint = target;
-            state.Execute(vehicle);
+            _state.TargetPoint = _target;
+            _state.Execute(vehicle);
+        }
+
+        public override void Update(Vehicle vehicle)
+        {
+            vehicle.ChangeState(_state);
         }
 
         private Point Find(Vehicle vehicle)

@@ -29,10 +29,16 @@ namespace GranDrust.GameEntities
 
             public WayPointNode SetNext(WayPointNode wayPointNode, Vehicle vehicle) //TODO: create clever map
             {
-                double nextWaypointX = (_x + 0.5D) * vehicle.Game.TrackTileSize;
-                double nextWaypointY = (_y + 0.5D) * vehicle.Game.TrackTileSize;
+                SetLastValue(vehicle, wayPointNode);
+                return Next = wayPointNode;
+            }
 
-                var cornerTileOffset = 0.3D * vehicle.Game.TrackTileSize;
+            public void SetLastValue(Vehicle vehicle, WayPointNode wayPointNode)
+            {
+                double nextWaypointX = (_x + 0.5D)*vehicle.Game.TrackTileSize;
+                double nextWaypointY = (_y + 0.5D)*vehicle.Game.TrackTileSize;
+
+                var cornerTileOffset = 0.3D*vehicle.Game.TrackTileSize;
 
                 switch (Type)
                 {
@@ -55,7 +61,6 @@ namespace GranDrust.GameEntities
                 }
 
                 Point = new Point(nextWaypointX, nextWaypointY);
-                return Next = wayPointNode;
             }
         }
 
@@ -72,6 +77,9 @@ namespace GranDrust.GameEntities
                 {
                     Add(waypoint[0], waypoint[1]);
                 }
+
+                _last.SetLastValue(_vehicle, _start);
+                
             }
 
             private void Add(int x, int y)
@@ -98,6 +106,14 @@ namespace GranDrust.GameEntities
 
                 return current.Point;
             }
+
+            public Point GetNextPoint(int index)
+            {
+                index = index % _vehicle.World.Waypoints.Length;
+                var point = _vehicle.World.Waypoints[index];
+
+                return GetNextPoint(point[0], point[1]);
+            }
         }
         
         public void Build(Vehicle vehicle)
@@ -110,6 +126,11 @@ namespace GranDrust.GameEntities
         public Point GetNextPoint(int x, int y)
         {
             return Structure.GetNextPoint(x, y);
+        }
+
+        public Point GetNextPoint(int index)
+        {
+            return Structure.GetNextPoint(index);
         }
     }
 }

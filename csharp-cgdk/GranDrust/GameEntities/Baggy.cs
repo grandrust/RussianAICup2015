@@ -24,11 +24,18 @@ namespace GranDrust.GameEntities
             Map = GetMap(this);
         }
 
-        private static IState _state = Seek.Instance;
-        public override IState State
+        private static IState _previousState = InitialState.Instance;
+        public override IState PreviousState
         {
-            get { return _state; }
-            set { _state = value; }
+            get { return _previousState; }
+            protected set { _previousState = value; }
+        }
+
+        private static IState _currentState = InitialState.Instance;
+        public override IState CurrentState
+        {
+            get { return _currentState; }
+            protected set { _currentState = value; }
         }
     }
 }

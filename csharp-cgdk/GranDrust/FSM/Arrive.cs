@@ -5,10 +5,9 @@ using GranDrust.Helpers;
 // ReSharper disable once CheckNamespace
 namespace GranDrust.FSM
 {
-    public class Arrive: ITargetState
+    public class Arrive: TargetState
     {
-        private const double Deceleration = 0.3D;
-        public Point TargetPoint { get; set; }
+        private const double Deceleration = 0.03D;
 
         private Arrive()
         {
@@ -19,38 +18,40 @@ namespace GranDrust.FSM
         {
             get { return _instantce ?? (_instantce = new Arrive()); }
         }
-        public void Execute(Vehicle vehicle)
+
+        public override void Execute(Vehicle vehicle)
         {
             var distance = vehicle.Self.GetDistanceTo(TargetPoint);
 
-            if (distance < vehicle.Self.Height * 0.5D) //TODO: fix it
-            {
-                vehicle.State = Seek.Instance;
-                vehicle.State.Execute(vehicle);
-                return;
-            }
-
             var speedModule = vehicle.Self.SpeedModule();
 
-            var speed = distance*Deceleration;
-            speed = Math.Min(speed, speedModule);
-            var nextPoint = vehicle.Self.NextPoint();
+            var speed = distance / (Deceleration * (vehicle.Self.AngularSpeed + vehicle.Game.TrackTileSize));
 
-            var angleToWaypoint = AngleTo(TargetPoint.X, TargetPoint.Y, nextPoint.X, nextPoint.Y, vehicle.Self.Angle);
-
+            var angleToWaypoint = AngleToNextPoint(TargetPoint, vehicle);
+            
             vehicle.Move.WheelTurn = angleToWaypoint * 32.0D / Math.PI;
-            vehicle.Move.EnginePower = speed / speedModule;
+            vehicle.Move.EnginePower = speed / Math.Cos(angleToWaypoint) * speedModule;
 
-            if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 9.5D * Math.PI)
+
+            vehicle.Move.EnginePower = Math.Abs(speedModule) < 0.1 ? 1.0D : speed / speedModule;
+
+            //if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 12.0D * Math.PI)
+            //{
+            //    vehicle.Move.IsBrake = true;
+            //}
+
+
+            if (Math.Cos(angleToWaypoint) * speedModule > speed)
             {
                 vehicle.Move.IsBrake = true;
             }
         }
 
-        private double AngleTo(double x, double y, double carX, double carY, double angle)
+        private double AngleToNextPoint(Point target, Vehicle vehicle) //TODO: Find another way
         {
-            double absoluteAngleTo = Math.Atan2(y - carY, x - carX);
-            double relativeAngleTo = absoluteAngleTo - angle;
+            var nextPoint = vehicle.Self.NextPoint();
+            double absoluteAngleTo = Math.Atan2(target.Y - nextPoint.Y, target.X - nextPoint.X);
+            double relativeAngleTo = absoluteAngleTo - vehicle.Self.Angle;
 
             while (relativeAngleTo > Math.PI)
             {

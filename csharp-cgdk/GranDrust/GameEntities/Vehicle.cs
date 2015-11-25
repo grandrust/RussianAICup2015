@@ -24,11 +24,21 @@ namespace GranDrust.GameEntities
             Map = map;
         }
 
-        public virtual IState State { get; set; }
+        public virtual IState CurrentState { get; protected set; }
+        public virtual IState PreviousState { get; protected set; }
+
+        public void ChangeState(IState state)
+        {
+            PreviousState.Terminate(this);
+            PreviousState = CurrentState;
+            CurrentState = state;
+            CurrentState.Enter(this);
+        }
 
         public virtual void Update()
         {
-            State.Execute(this);
+            CurrentState.Update(this);
+            CurrentState.Execute(this);
         }
     }
 }

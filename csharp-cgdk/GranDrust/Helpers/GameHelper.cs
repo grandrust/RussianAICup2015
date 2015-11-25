@@ -38,7 +38,7 @@ namespace GranDrust.Helpers
             return x - pointX == 0 && y - pointY == 0;
         }
 
-        private static int GetTileIndex(double coordinate, double tileSize)
+        public static int GetTileIndex(double coordinate, double tileSize)
         {
             return Convert.ToInt32(Math.Floor(coordinate / tileSize));
         }
@@ -60,14 +60,9 @@ namespace GranDrust.Helpers
             var right = left + vehicle.Game.TrackTileSize;
             var bottom = top + vehicle.Game.TrackTileSize;
 
-            var width = vehicle.Self.Width/2;
-            var height = vehicle.Self.Height / 2;
-            var innerAngle = Math.Atan2(height, width);
+            var angle = GetMaxDistanceAngle(vehicle);
 
-            var coeff = Math.Cos(vehicle.Self.Angle - Math.Sign(vehicle.Self.Angle)*innerAngle);
-            coeff = coeff > 0.5D ? 1.0D : coeff;
-
-            var offset = vehicle.Game.TrackTileMargin + DiagonalLength(vehicle) * -Math.Sign(coeff); // TODO: FIX IT
+            var offset = vehicle.Game.TrackTileMargin * 1.01D; // TODO: FIX IT
 
             switch (tileType)
             {
@@ -75,11 +70,11 @@ namespace GranDrust.Helpers
                 case TileType.LeftTopCorner:
                 case TileType.RightTopCorner:
                 case TileType.BottomHeadedT:
-                    top = point.Y - top;
+                    top = vehicle.Self.Y - top;
                     break;
             }
 
-            if (top < offset)
+            if (top + DiagonalLength(vehicle) * Math.Sin(angle) < offset)
                 return true;
 
             switch (tileType)
@@ -88,11 +83,11 @@ namespace GranDrust.Helpers
                 case TileType.LeftBottomCorner:
                 case TileType.RightBottomCorner:
                 case TileType.TopHeadedT:
-                    bottom = bottom - point.Y;
+                    bottom = bottom - vehicle.Self.Y;
                     break;
             }
 
-            if (bottom < offset)
+            if (bottom - DiagonalLength(vehicle) * Math.Sin(angle) < offset)
                 return true;
 
             switch (tileType)
@@ -101,11 +96,11 @@ namespace GranDrust.Helpers
                 case TileType.LeftBottomCorner:
                 case TileType.LeftTopCorner:
                 case TileType.RightHeadedT:
-                    left = point.X - left;
+                    left = vehicle.Self.X - left;
                     break;
             }
 
-            if (left < offset)
+            if (left + DiagonalLength(vehicle) * Math.Cos(angle) < offset)
                 return true;
 
             switch (tileType)
@@ -114,14 +109,24 @@ namespace GranDrust.Helpers
                 case TileType.RightBottomCorner:
                 case TileType.RightTopCorner:
                 case TileType.LeftHeadedT:
-                    right = right - point.X;
+                    right = right - vehicle.Self.X;
                     break;
             }
 
-            if (right < offset)
+            if (right - DiagonalLength(vehicle) * Math.Cos(angle) < offset)
                 return true;
 
             return false;
+        }
+
+        private static double GetMaxDistanceAngle(Vehicle vehicle)
+        {
+            var width = vehicle.Self.Width/2;
+            var height = vehicle.Self.Height/2;
+            var innerAngle = Math.Atan2(height, width);
+
+            var angle = vehicle.Self.Angle - Math.Sign(vehicle.Self.Angle)*innerAngle;
+            return angle;
         }
 
         private static bool InCorners(int xIndex, int yIndex, Vehicle vehicle, Point point)
@@ -130,6 +135,8 @@ namespace GranDrust.Helpers
             var top = yIndex * vehicle.Game.TrackTileSize;
             var right = (xIndex + 1) * vehicle.Game.TrackTileSize;
             var bottom = (yIndex + 1) * vehicle.Game.TrackTileSize;
+
+            var angle = GetMaxDistanceAngle(vehicle);
 
             var offset = vehicle.Game.TrackTileMargin + DiagonalLength(vehicle);
 

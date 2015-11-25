@@ -11,14 +11,19 @@ namespace GranDrust.FSM.States
         }
 
         private static Reversal _instantce;
-        public static Reversal Instance => _instantce ?? (_instantce = new Reversal());
+        public static Reversal Instance
+        {
+            get { return _instantce ?? (_instantce = new Reversal()); }
+        }
 
         private Point _initPoint;
 
         public override void Enter(Vehicle vehicle)
         {
             var target = (ITargetState)vehicle.PreviousState;
-            _initPoint = target?.TargetPoint ?? new Point();
+            _initPoint = target != null 
+                            ? target.TargetPoint
+                            : new Point();
         }
 
         public override void Execute(Vehicle vehicle)
@@ -36,7 +41,7 @@ namespace GranDrust.FSM.States
         {
             var angleTo = vehicle.Self.GetAngleTo(_initPoint);
             if (Math.Abs(angleTo) < Math.PI / 5)
-                vehicle.ChangeState(Seek.Instance);
+                vehicle.ChangeState(Stop.Instance);
         }
     }
 }

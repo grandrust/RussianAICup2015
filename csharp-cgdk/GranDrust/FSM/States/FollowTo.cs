@@ -11,7 +11,10 @@ namespace GranDrust.FSM.States
         }
 
         private static FollowTo _instantce;
-        public static FollowTo Instance => _instantce ?? (_instantce = new FollowTo());
+        public static FollowTo Instance
+        {
+            get { return _instantce ?? (_instantce = new FollowTo()); }
+        }
 
         public override void Execute(Vehicle vehicle)
         {

@@ -12,6 +12,7 @@ namespace GranDrust.FSM.States
             if (HasObstacle(vehicle))
             {
                 vehicle.ChangeState(Reversal.Instance);
+                return;
             }
 
             var distance = vehicle.Self.GetDistanceTo(TargetPoint);
@@ -28,7 +29,7 @@ namespace GranDrust.FSM.States
         {
             var nextPoint = vehicle.Self.NextPoint();
 
-            return vehicle.IsOutWay(nextPoint) && vehicle.Self.SpeedModule() < 0.1D;
+            return vehicle.Self.SpeedModule() < 0.1D && vehicle.IsOutWay(nextPoint);
 
         }
     }

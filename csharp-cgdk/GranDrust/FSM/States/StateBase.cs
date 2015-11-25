@@ -1,5 +1,4 @@
-﻿using System;
-using GranDrust.GameEntities;
+﻿using GranDrust.GameEntities;
 
 namespace GranDrust.FSM.States
 {

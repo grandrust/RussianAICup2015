@@ -31,8 +31,10 @@ namespace GranDrust.FSM.States
             vehicle.Move.WheelTurn = angleToWaypoint * 32.0D / Math.PI;
             vehicle.Move.EnginePower = speed / Math.Cos(angleToWaypoint) * speedModule;
 
+            //vehicle.Move.EnginePower = Math.Abs(speedModule) < 0.1 ? 1.0D : speed / speedModule;
 
-            vehicle.Move.EnginePower = Math.Abs(speedModule) < 0.1 ? 1.0D : speed / speedModule;
+            if (Math.Abs(speedModule) < 0.1)
+                vehicle.Move.EnginePower = 1.0D;
 
             //if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 12.0D * Math.PI)
             //{
@@ -40,7 +42,7 @@ namespace GranDrust.FSM.States
             //}
 
 
-            if (Math.Cos(angleToWaypoint) * speedModule > speed)
+            if (Math.Cos(angleToWaypoint) * speedModule > speed)  //TODO: consistent brake
             {
                 vehicle.Move.IsBrake = true;
             }

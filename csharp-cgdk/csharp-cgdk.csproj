@@ -84,6 +84,7 @@
     <Compile Include="GranDrust\GameEntities\Vehicle.cs" />
     <Compile Include="GranDrust\Helpers\GameHelper.cs" />
     <Compile Include="GranDrust\Helpers\MovementHelper.cs" />
+    <Compile Include="GranDrust\Helpers\ObstacleHelper.cs" />
     <Compile Include="GranDrust\Helpers\Point.cs" />
     <Compile Include="GranDrust\Search\BFSeach.cs" />
     <Compile Include="Model\Bonus.cs" />

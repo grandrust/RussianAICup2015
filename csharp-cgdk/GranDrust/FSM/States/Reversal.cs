@@ -16,19 +16,22 @@ namespace GranDrust.FSM.States
             get { return _instantce ?? (_instantce = new Reversal()); }
         }
 
-        private Point _initPoint;
+        private Point _nextPoint;
+        private Point _obstaclePoint;
 
         public override void Enter(Vehicle vehicle)
         {
             var target = (ITargetState)vehicle.PreviousState;
-            _initPoint = target != null 
+            _nextPoint = target != null 
                             ? target.TargetPoint
                             : new Point();
+
+            _obstaclePoint = vehicle.Self.CurrentPoint();
         }
 
         public override void Execute(Vehicle vehicle)
         {
-            var angleTo = vehicle.Self.GetAngleTo(_initPoint);
+            var angleTo = vehicle.Self.GetAngleTo(_nextPoint);
             var desiredAngle = Math.Sign(angleTo) > 0.0D 
                                     ? -Math.PI/2 
                                     : Math.PI/2;
@@ -39,9 +42,15 @@ namespace GranDrust.FSM.States
         
         public override void Update(Vehicle vehicle)
         {
-            var angleTo = vehicle.Self.GetAngleTo(_initPoint);
-            if (Math.Abs(angleTo) < Math.PI / 5)
+            var angleTo = vehicle.Self.GetAngleTo(_nextPoint);
+
+            //TODO: back wall possible
+
+            var angleToNextPoint = Math.Abs(angleTo);
+            if (vehicle.Self.GetDistanceTo(_obstaclePoint) > 1.5D* vehicle.Self.Width
+                    && angleToNextPoint < Math.PI / 5)
                 vehicle.ChangeState(Stop.Instance);
+
         }
     }
 }

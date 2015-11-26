@@ -17,6 +17,7 @@ namespace GranDrust.FSM.States
 
             var distance = vehicle.Self.GetDistanceTo(TargetPoint);
             
+            //TODO: fix choose path
             if (vehicle.InTheSameTile(TargetPoint)
                     || (distance <= MovementHelper.GetDistance(vehicle.Self.NextPoint(), TargetPoint) 
                             && vehicle.Map.GetNextPoint(vehicle.Self.NextWaypointIndex) != TargetPoint))

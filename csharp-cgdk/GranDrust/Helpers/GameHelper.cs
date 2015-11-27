@@ -30,8 +30,9 @@ namespace GranDrust.Helpers
 
         public static bool InTheSameTile(this Vehicle vehicle, Point point)
         {
-            var x = GetTileIndex(vehicle.Self.X, vehicle.Game.TrackTileSize);
-            var y = GetTileIndex(vehicle.Self.Y, vehicle.Game.TrackTileSize);
+            var currentPoint = vehicle.NosePoint();
+            var x = GetTileIndex(currentPoint.X, vehicle.Game.TrackTileSize);
+            var y = GetTileIndex(currentPoint.Y, vehicle.Game.TrackTileSize);
             var pointX = GetTileIndex(point.X, vehicle.Game.TrackTileSize);
             var pointY = GetTileIndex(point.Y, vehicle.Game.TrackTileSize);
 
@@ -41,6 +42,20 @@ namespace GranDrust.Helpers
         public static int GetTileIndex(double coordinate, double tileSize)
         {
             return Convert.ToInt32(Math.Floor(coordinate / tileSize));
+        }
+
+        public static Point NosePoint(this Vehicle vehicle)
+        {
+            return new Point(vehicle.Self.X + Math.Cos(vehicle.Self.Angle)*vehicle.DiagonalLength(),
+                vehicle.Self.Y + Math.Sin(vehicle.Self.Angle)*vehicle.DiagonalLength());
+        }
+
+        public static double DiagonalLength(this Vehicle vehicle)
+        {
+            var x = vehicle.Self.Width / 2;
+            var y = vehicle.Self.Height / 2;
+
+            return Math.Sqrt(x * x + y * y);
         }
     }
 }

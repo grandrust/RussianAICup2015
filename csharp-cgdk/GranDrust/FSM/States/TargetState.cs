@@ -6,6 +6,7 @@ namespace GranDrust.FSM.States
     public class TargetState : StateBase, ITargetState
     {
         public Point TargetPoint { get; set; }
+        private Point _obstaclePoint;
 
         public override void Update(Vehicle vehicle)
         { 
@@ -17,7 +18,7 @@ namespace GranDrust.FSM.States
 
             var distance = vehicle.Self.GetDistanceTo(TargetPoint);
             
-            //TODO: fix choose path
+            //TODO: fix choose path can stay in the same tile
             if (vehicle.InTheSameTile(TargetPoint)
                     || (distance <= MovementHelper.GetDistance(vehicle.Self.NextPoint(), TargetPoint) 
                             && vehicle.Map.GetNextPoint(vehicle.Self.NextWaypointIndex) != TargetPoint))
@@ -30,7 +31,7 @@ namespace GranDrust.FSM.States
         {
             var nextPoint = vehicle.Self.NextPoint();
 
-            return vehicle.Self.SpeedModule() < 0.1D && vehicle.IsOutWay(nextPoint);
+            return vehicle.Self.SpeedModule() < 0.1D && vehicle.IsOutWay(nextPoint, ref _obstaclePoint);
 
         }
     }

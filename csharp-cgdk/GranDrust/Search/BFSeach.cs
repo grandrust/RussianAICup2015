@@ -72,8 +72,16 @@ namespace GranDrust.Search
         {
             _vehicle = vehicle;
             terminatePoint = new Cell(vehicle.Self.NextWaypointX, vehicle.Self.NextWaypointY);
-            startPoint = new Cell(GameHelper.GetTileIndex(vehicle.Self.X, vehicle.Game.TrackTileSize),
-                                  GameHelper.GetTileIndex(vehicle.Self.Y, vehicle.Game.TrackTileSize));
+
+            var nosePoint = vehicle.NosePoint();
+            startPoint = new Cell(GameHelper.GetTileIndex(nosePoint.X, vehicle.Game.TrackTileSize),
+                                  GameHelper.GetTileIndex(nosePoint.Y, vehicle.Game.TrackTileSize));
+
+            if (startPoint.Equals(terminatePoint))
+            {
+                var point = _vehicle.World.Waypoints[vehicle.Self.NextWaypointIndex + 1];
+                startPoint = new Cell(point[0], point[1]);
+            }
 
             gridWidth = vehicle.World.Width;
             gridHeight = vehicle.World.Height;

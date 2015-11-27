@@ -25,8 +25,7 @@ namespace GranDrust.FSM.States
 
             var route = new BFSearch(vehicle).Search();
 
-            //_target = Find(vehicle);
-            _target = Find(vehicle, route[0]);
+            _target = Find(vehicle, route[0]); //TODO: nose point
 
             var previousState = vehicle.PreviousState as ITargetState;
             if (previousState != null)

@@ -47,8 +47,12 @@ namespace GranDrust.FSM.States
             //TODO: back wall possible
 
             var angleToNextPoint = Math.Abs(angleTo);
-            if (vehicle.Self.GetDistanceTo(_obstaclePoint) > 1.5D* vehicle.Self.Width
-                    && angleToNextPoint < Math.PI / 5)
+            var obstacleDistance = vehicle.Self.GetDistanceTo(_obstaclePoint);
+            if (obstacleDistance > 1.5D* vehicle.Self.Width && angleToNextPoint < Math.PI / 5)
+                vehicle.ChangeState(Stop.Instance);
+
+
+            if (obstacleDistance > 0.5 * vehicle.Self.Width && vehicle.Self.SpeedModule() < 0.5D)
                 vehicle.ChangeState(Stop.Instance);
 
         }

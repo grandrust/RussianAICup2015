@@ -6,15 +6,15 @@ namespace GranDrust.Helpers
 {
     public static class ObstacleHelper
     {
-        public static bool IsOutWay(this Vehicle vehicle, Point point)
+        public static bool IsOutWay(this Vehicle vehicle, Point point, ref Point obstaclePoint)
         {
             var xIndex = GameHelper.GetTileIndex(vehicle.Self.X, vehicle.Game.TrackTileSize);
             var yIndex = GameHelper.GetTileIndex(vehicle.Self.Y, vehicle.Game.TrackTileSize);
 
-            return InCorners(xIndex, yIndex, vehicle, point) || InLines(xIndex, yIndex, vehicle, point);
+            return InCorners(xIndex, yIndex, vehicle, point, ref obstaclePoint) || InLines(xIndex, yIndex, vehicle, ref obstaclePoint);
         }
 
-        private static bool InLines(int xIndex, int yIndex, Vehicle vehicle, Point point)
+        private static bool InLines(int xIndex, int yIndex, Vehicle vehicle, ref Point obstaclePoint)
         {
             var tileType = vehicle.World.TilesXY[xIndex][yIndex];
 
@@ -37,7 +37,7 @@ namespace GranDrust.Helpers
                     break;
             }
 
-            if (top + DiagonalLength(vehicle) * DesiredAngle(vehicle, innerAngle, true) < offset)
+            if (top + vehicle.DiagonalLength() * DesiredAngle(vehicle, innerAngle, true) < offset)
                 return true;
 
             switch (tileType)
@@ -50,7 +50,7 @@ namespace GranDrust.Helpers
                     break;
             }
 
-            if (bottom - DiagonalLength(vehicle) * DesiredAngle(vehicle, innerAngle, true) < offset)
+            if (bottom - vehicle.DiagonalLength() * DesiredAngle(vehicle, innerAngle, true) < offset)
                 return true;
 
             switch (tileType)
@@ -63,7 +63,7 @@ namespace GranDrust.Helpers
                     break;
             }
 
-            if (left + DiagonalLength(vehicle) * DesiredAngle(vehicle, innerAngle, false) < offset)
+            if (left + vehicle.DiagonalLength() * DesiredAngle(vehicle, innerAngle, false) < offset)
                 return true;
 
             switch (tileType)
@@ -76,7 +76,7 @@ namespace GranDrust.Helpers
                     break;
             }
 
-            if (right - DiagonalLength(vehicle) * DesiredAngle(vehicle, innerAngle, false) < offset)
+            if (right - vehicle.DiagonalLength() * DesiredAngle(vehicle, innerAngle, false) < offset)
                 return true;
 
             return false;
@@ -89,34 +89,21 @@ namespace GranDrust.Helpers
                 : Math.Cos(vehicle.Self.Angle - Math.Sign(Math.Tan(vehicle.Self.Angle)) * innerAngle);
         }
 
-        private static bool InCorners(int xIndex, int yIndex, Vehicle vehicle, Point point)
+        private static bool InCorners(int xIndex, int yIndex, Vehicle vehicle, Point point, ref Point obstaclePoint)
         {
             var left = xIndex * vehicle.Game.TrackTileSize;
             var top = yIndex * vehicle.Game.TrackTileSize;
             var right = (xIndex + 1) * vehicle.Game.TrackTileSize;
             var bottom = (yIndex + 1) * vehicle.Game.TrackTileSize;
 
-            var offset = vehicle.Game.TrackTileMargin + DiagonalLength(vehicle) + 1.5D;
+            var offset = vehicle.Game.TrackTileMargin + vehicle.DiagonalLength() + 1.5D;
 
-            //TODO: check reversal
-
-            var cosA = Math.Cos(vehicle.Self.Angle);
-            var sinA = Math.Sin(vehicle.Self.Angle);
-
-            return MovementHelper.GetDistance(left, top, point.X, point.Y) < offset && sinA < 0.0D && cosA < 0.0D
-                   || MovementHelper.GetDistance(right, top, point.X, point.Y) < offset && sinA < 0.0D && cosA > 0.0D
-                   || MovementHelper.GetDistance(right, bottom, point.X, point.Y) < offset && sinA > 0.0D && cosA > 0.0D //TODO: Sin can be negative
-                   || MovementHelper.GetDistance(left, bottom, point.X, point.Y) < offset && sinA > 0.0D && cosA < 0.0D;
+            return MovementHelper.GetDistance(left, top, point.X, point.Y) < offset
+                   || MovementHelper.GetDistance(right, top, point.X, point.Y) < offset
+                   || MovementHelper.GetDistance(right, bottom, point.X, point.Y) < offset
+                   || MovementHelper.GetDistance(left, bottom, point.X, point.Y) < offset;
 
 
-        }
-
-        private static double DiagonalLength(Vehicle vehicle)
-        {
-            var x = vehicle.Self.Width / 2;
-            var y = vehicle.Self.Height / 2;
-
-            return Math.Sqrt(x * x + y * y);
         }
     }
 }

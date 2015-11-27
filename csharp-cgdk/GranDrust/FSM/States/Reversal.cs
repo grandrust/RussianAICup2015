@@ -52,7 +52,7 @@ namespace GranDrust.FSM.States
                 vehicle.ChangeState(Stop.Instance);
 
 
-            if (obstacleDistance > 0.5 * vehicle.Self.Width && vehicle.Self.SpeedModule() < 0.5D)
+            if (vehicle.Self.SpeedModule() < 0.2D && vehicle.Self.EnginePower < -0.98D)
                 vehicle.ChangeState(Stop.Instance);
 
         }

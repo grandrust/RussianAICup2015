@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
 using GranDrust.GameEntities;
-using GranDrust.Helpers;
 
 namespace GranDrust.Search
 {
@@ -34,14 +33,6 @@ namespace GranDrust.Search
                 Y = y;
             }
 
-            public static Cell Empty
-            {
-                get
-                {
-                    return new Cell { X = -1, Y = -1 };
-                }
-            }
-
             public override bool Equals(object obj)
             {
                 var cell = obj as Cell;
@@ -57,31 +48,21 @@ namespace GranDrust.Search
         }
 
 
-        IList<Cell> queue;
-        IList<int> parentIndexs;
+        IList<Cell> _queue;
+        IList<int> _parentIndexs;
         Cell terminatePoint;
         Cell startPoint;
 
         int gridWidth;
         int gridHeight;
-
-        int searchLimit;
+        
         private Vehicle _vehicle;
 
-        public BFSearch(Vehicle vehicle)
+        public BFSearch(Vehicle vehicle, Cell start, Cell terminate)
         {
             _vehicle = vehicle;
-            terminatePoint = new Cell(vehicle.Self.NextWaypointX, vehicle.Self.NextWaypointY);
-
-            var nosePoint = vehicle.NosePoint();
-            startPoint = new Cell(GameHelper.GetTileIndex(nosePoint.X, vehicle.Game.TrackTileSize),
-                                  GameHelper.GetTileIndex(nosePoint.Y, vehicle.Game.TrackTileSize));
-
-            if (startPoint.Equals(terminatePoint))
-            {
-                var point = _vehicle.World.Waypoints[vehicle.Self.NextWaypointIndex + 1];
-                startPoint = new Cell(point[0], point[1]);
-            }
+            terminatePoint = terminate;
+            startPoint = start;
 
             gridWidth = vehicle.World.Width;
             gridHeight = vehicle.World.Height;
@@ -89,13 +70,13 @@ namespace GranDrust.Search
 
         public IList<Cell> Search(int limit = 400)
         {
-            searchLimit = limit;
+            var searchLimit = limit;
 
             var current = startPoint;
             var index = 0;
 
-            queue = new List<Cell> { current };
-            parentIndexs = new List<int> { index };
+            _queue = new List<Cell> { current };
+            _parentIndexs = new List<int> { index };
 
             while (!current.Equals(terminatePoint) && index < searchLimit)
             {
@@ -116,9 +97,9 @@ namespace GranDrust.Search
 
                 index++;
 
-                if (index >= queue.Count) break;
+                if (index >= _queue.Count) break;
 
-                current = queue[index];
+                current = _queue[index];
             }
 
             return CreateRoute(index);
@@ -192,12 +173,12 @@ namespace GranDrust.Search
         private IList<Cell> CreateRoute(int indx)
         {
             var route = new List<Cell>();
-            var index = (indx > 0 && indx < queue.Count) ? indx : queue.Count - 1;
+            var index = (indx > 0 && indx < _queue.Count) ? indx : _queue.Count - 1;
 
             while (index > 0)
             {
-                route.Add(queue[index]);
-                index = parentIndexs[index];
+                route.Add(_queue[index]);
+                index = _parentIndexs[index];
             }
 
             route.Reverse();
@@ -206,10 +187,10 @@ namespace GranDrust.Search
 
         private void AddCellToMap(int index, Cell newCell)
         {
-            if (CanAddCell(newCell) && !queue.Contains(newCell))
+            if (CanAddCell(newCell) && !_queue.Contains(newCell))
             {
-                queue.Add(newCell);
-                parentIndexs.Add(index);
+                _queue.Add(newCell);
+                _parentIndexs.Add(index);
             }
         }
 

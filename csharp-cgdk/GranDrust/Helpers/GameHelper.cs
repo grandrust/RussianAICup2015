@@ -30,7 +30,7 @@ namespace GranDrust.Helpers
 
         public static bool InTheSameTile(this Vehicle vehicle, Point point)
         {
-            var currentPoint = vehicle.NosePoint();
+            var currentPoint = vehicle.Self.CurrentPoint();//vehicle.NosePoint();
             var x = GetTileIndex(currentPoint.X, vehicle.Game.TrackTileSize);
             var y = GetTileIndex(currentPoint.Y, vehicle.Game.TrackTileSize);
             var pointX = GetTileIndex(point.X, vehicle.Game.TrackTileSize);

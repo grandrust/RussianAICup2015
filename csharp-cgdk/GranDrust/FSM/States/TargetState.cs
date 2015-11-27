@@ -10,7 +10,7 @@ namespace GranDrust.FSM.States
 
         public override void Update(Vehicle vehicle)
         { 
-            if (HasObstacle(vehicle))
+            if (HasObstacle(vehicle) && vehicle.Self.EnginePower > 0.85D && vehicle.Self.SpeedModule() < 0.1D)
             {
                 vehicle.ChangeState(Reversal.Instance);
                 return;
@@ -19,9 +19,8 @@ namespace GranDrust.FSM.States
             var distance = vehicle.Self.GetDistanceTo(TargetPoint);
             
             //TODO: fix choose path can stay in the same tile
-            if (vehicle.InTheSameTile(TargetPoint)
-                    || (distance <= MovementHelper.GetDistance(vehicle.Self.NextPoint(), TargetPoint) 
-                            && vehicle.Map.GetNextPoint(vehicle.Self.NextWaypointIndex) != TargetPoint))
+            if (vehicle.InTheSameTile(TargetPoint) //&& vehicle.Self.EnginePower > 0.2D
+                    || (distance <= MovementHelper.GetDistance(vehicle.Self.NextPoint(), TargetPoint)))
             {
                 vehicle.ChangeState(Seek.Instance);
             }

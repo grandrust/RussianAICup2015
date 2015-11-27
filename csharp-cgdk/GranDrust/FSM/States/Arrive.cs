@@ -29,23 +29,24 @@ namespace GranDrust.FSM.States
             var angleToWaypoint = AngleToNextPoint(TargetPoint, vehicle);
             
             vehicle.Move.WheelTurn = angleToWaypoint * 32.0D / Math.PI;
-            vehicle.Move.EnginePower = speed / Math.Cos(angleToWaypoint) * speedModule;
+            vehicle.Move.EnginePower = speed / Math.Abs(Math.Cos(angleToWaypoint)) * speedModule;
 
-            //vehicle.Move.EnginePower = Math.Abs(speedModule) < 0.1 ? 1.0D : speed / speedModule;
+            vehicle.Move.EnginePower = Math.Abs(speedModule) < 0.1 ? 1.0D : speed / speedModule;
 
-            if (Math.Abs(speedModule) < 0.1)
-                vehicle.Move.EnginePower = 1.0D;
+            //if (Math.Abs(speedModule) < 0.1)
+            //    vehicle.Move.EnginePower = 1.0D;
 
-            //if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 12.0D * Math.PI)
-            //{
-            //    vehicle.Move.IsBrake = true;
-            //}
-
-
-            if (Math.Cos(angleToWaypoint) * speedModule > speed)  //TODO: consistent brake
+            if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 24.0D * Math.PI)
             {
                 vehicle.Move.IsBrake = true;
             }
+
+
+            if (Math.Abs(Math.Cos(angleToWaypoint)) * speedModule > speed)  //TODO: consistent brake
+            {
+                vehicle.Move.IsBrake = true;
+            }
+
         }
 
         private double AngleToNextPoint(Point target, Vehicle vehicle) //TODO: Find another way

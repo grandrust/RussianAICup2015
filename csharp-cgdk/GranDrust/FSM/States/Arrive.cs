@@ -1,4 +1,5 @@
 ﻿using System;
+using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
 using GranDrust.GameEntities;
 using GranDrust.Helpers;
 
@@ -33,10 +34,8 @@ namespace GranDrust.FSM.States
 
             vehicle.Move.EnginePower = Math.Abs(speedModule) < 0.1 ? 1.0D : speed / speedModule;
 
-            //if (Math.Abs(speedModule) < 0.1)
-            //    vehicle.Move.EnginePower = 1.0D;
 
-            if (speedModule * speedModule * Math.Abs(angleToWaypoint) > 24.0D * Math.PI)
+            if (speedModule * speedModule * Math.Abs(angleToWaypoint) /** vehicle.Self.AngularSpeed */> 42.5D * Math.PI)
             {
                 vehicle.Move.IsBrake = true;
             }
@@ -44,9 +43,15 @@ namespace GranDrust.FSM.States
 
             if (Math.Abs(Math.Cos(angleToWaypoint)) * speedModule > speed)  //TODO: consistent brake
             {
-                vehicle.Move.IsBrake = true;
+                 vehicle.Move.IsBrake = true;
             }
 
+            
+            //STARIKE ACTION
+            vehicle.Move.IsSpillOil = vehicle.CurrentTile() != TileType.Horizontal &&
+                                      vehicle.CurrentTile() != TileType.Vertical;
+
+            vehicle.Strike();
         }
 
         private double AngleToNextPoint(Point target, Vehicle vehicle) //TODO: Find another way

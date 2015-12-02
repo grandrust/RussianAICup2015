@@ -1,27 +1,22 @@
-﻿using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk;
-using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
+﻿using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
+using GranDrust.GameEntities;
 
 // ReSharper disable once CheckNamespace
 namespace GranDrust.Factories
 {
     public class RaceFactory
     {
-        //static RaceStratagy _strategy;
-        //public static RaceStratagy GetRaceStratagy(Car car)
-        //{
-        //    if (_strategy != null)
-        //        return _strategy;
-
-        //    switch (car.Type)
-        //    {
-        //        case CarType.Buggy:
-        //        case CarType.Jeep:
-        //        default: 
-        //            _strategy = new RaceStratagy();
-        //            break;
-        //    }
-
-        //    return _strategy;
-        //}
+        public static Vehicle GetVehicle(Car car, World world, Game game, Move move)
+        {
+            switch (car.Type)
+            {
+                case CarType.Buggy:
+                    return new Baggy(car, world, game, move);
+                case CarType.Jeep:
+                    return new Jeep(car, world, game, move);
+                default:
+                    return new Baggy(car, world, game, move);
+            }
+        }
     }
 }

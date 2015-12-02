@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
 using GranDrust.GameEntities;
+using GranDrust.Helpers;
 
 namespace GranDrust.Search
 {
@@ -48,52 +49,47 @@ namespace GranDrust.Search
         }
 
 
-        IList<Cell> _queue;
-        IList<int> _parentIndexs;
-        Cell terminatePoint;
-        Cell startPoint;
+        private IList<Cell> _queue;
+        private IList<int> _parentIndexs;
+        private readonly Cell _terminatePoint;
+        private readonly Cell _startPoint;
 
-        int gridWidth;
-        int gridHeight;
+        private readonly int _gridWidth;
+        private readonly int _gridHeight;
         
-        private Vehicle _vehicle;
+        private readonly Vehicle _vehicle;
 
         public BFSearch(Vehicle vehicle, Cell start, Cell terminate)
         {
             _vehicle = vehicle;
-            terminatePoint = terminate;
-            startPoint = start;
+            _terminatePoint = terminate;
+            _startPoint = start;
 
-            gridWidth = vehicle.World.Width;
-            gridHeight = vehicle.World.Height;
+            _gridWidth = vehicle.World.Width;
+            _gridHeight = vehicle.World.Height;
         }
 
         public IList<Cell> Search(int limit = 400)
         {
             var searchLimit = limit;
 
-            var current = startPoint;
+            var current = _startPoint;
             var index = 0;
 
             _queue = new List<Cell> { current };
             _parentIndexs = new List<int> { index };
 
-            while (!current.Equals(terminatePoint) && index < searchLimit)
+            var carCenter = _vehicle.Self.CurrentPoint();
+            var nosePoint = _vehicle.NosePoint();
+            var isRight = carCenter.X - nosePoint.X < 0.0D;
+            var isBottom = carCenter.Y - nosePoint.Y < 0.0D;
+
+            while (!current.Equals(_terminatePoint) && index < searchLimit)
             {
-                if (Math.Abs(terminatePoint.X - startPoint.X) > Math.Abs(terminatePoint.Y - startPoint.Y))
-                {
-                    AddRight(index, current);
-                    AddTop(index, current);
-                    AddLeft(index, current);
-                    AddBottom(index, current);
-                }
+                if (Math.Abs(_vehicle.Self.SpeedX) > Math.Abs(_vehicle.Self.SpeedY))
+                    HorizontalStep(isRight, isBottom, index, current);
                 else
-                {
-                    AddTop(index, current);
-                    AddRight(index, current);
-                    AddBottom(index, current);
-                    AddLeft(index, current);
-                }
+                    VerticalStep(isRight, isBottom, index, current);
 
                 index++;
 
@@ -103,6 +99,55 @@ namespace GranDrust.Search
             }
 
             return CreateRoute(index);
+        }
+
+        private void VerticalStep(bool isRight, bool isBottom, int index, Cell current)
+        {
+            if (isBottom)
+                AddBottom(index, current);
+            else
+                AddTop(index, current);
+            
+            if (isRight)
+                AddRight(index, current);
+            else
+                AddLeft(index, current);
+
+
+            if (!isBottom)
+                AddBottom(index, current);
+            else
+                AddTop(index, current);
+
+            if (!isRight)
+                AddRight(index, current);
+            else
+                AddLeft(index, current);
+
+        }
+
+        private void HorizontalStep(bool isRight, bool isBottom, int index, Cell current)
+        {
+            if (isRight)
+                AddRight(index, current);
+            else
+                AddLeft(index, current);
+
+            if (isBottom)
+                AddBottom(index, current);
+            else
+                AddTop(index, current);
+
+
+            if (!isRight)
+                AddRight(index, current);
+            else
+                AddLeft(index, current);
+
+            if (!isBottom)
+                AddBottom(index, current);
+            else
+                AddTop(index, current);
         }
 
         private void AddTop(int index, Cell current)
@@ -201,8 +246,8 @@ namespace GranDrust.Search
 
         private bool InGridRange(Cell cell)
         {
-            if (cell.X < 0 || cell.X >= gridWidth) return false;
-            if (cell.Y < 0 || cell.Y >= gridHeight) return false;
+            if (cell.X < 0 || cell.X >= _gridWidth) return false;
+            if (cell.Y < 0 || cell.Y >= _gridHeight) return false;
 
             return true;
         }

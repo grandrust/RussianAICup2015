@@ -24,7 +24,7 @@ namespace GranDrust.FSM.States
             vehicle.Move.WheelTurn = angleToWaypoint * 32.0D / Math.PI;
             vehicle.Move.EnginePower = 1.0D;
             
-            if (speedModule*speedModule*Math.Abs(angleToWaypoint) > 10.0D*Math.PI)
+            if (speedModule*speedModule*Math.Abs(angleToWaypoint) > 40.0D*Math.PI)
             {
                 vehicle.Move.IsBrake = true;
             }

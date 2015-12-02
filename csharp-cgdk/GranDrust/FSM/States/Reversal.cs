@@ -48,6 +48,8 @@ namespace GranDrust.FSM.States
 
             var angleToNextPoint = Math.Abs(angleTo);
             var obstacleDistance = vehicle.Self.GetDistanceTo(_obstaclePoint);
+
+
             if (obstacleDistance > 1.5D* vehicle.Self.Width && angleToNextPoint < Math.PI / 5)
                 vehicle.ChangeState(Stop.Instance);
 

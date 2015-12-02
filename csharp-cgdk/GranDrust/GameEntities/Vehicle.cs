@@ -1,3 +1,4 @@
+using System;
 using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
 using GranDrust.FSM.States;
 
@@ -39,6 +40,18 @@ namespace GranDrust.GameEntities
         {
             CurrentState.Update(this);
             CurrentState.Execute(this);
+        }
+
+        public virtual void Strike()
+        {
+            foreach (var car in World.Cars)
+            {
+                if (car.IsTeammate) continue;
+
+                var angel = Self.GetAngleTo(car);
+
+                Move.IsThrowProjectile = Math.Abs(angel) < 0.08D;
+            }
         }
     }
 }

@@ -4,10 +4,10 @@ using GranDrust.FSM.States;
 // ReSharper disable once CheckNamespace
 namespace GranDrust.GameEntities
 {
-    public class Baggy: Vehicle
+    public class Jeep: Vehicle
     {
         private static Map _map;
-        private static Map GetMap(Baggy vehicle)
+        private static Map GetMap(Jeep vehicle)
         {
             if (_map == null)
             {
@@ -18,11 +18,17 @@ namespace GranDrust.GameEntities
             return _map;
         }
 
-        public Baggy(Car self, World world, Game game, Move move) 
+        public Jeep(Car self, World world, Game game, Move move) 
             : base(self, world, game, move)
         {
             Map = GetMap(this);
         }
+
+        public override void Strike()
+        {
+            base.Strike();
+        }
+
 
         private static IState _previousState = InitialState.Instance;
         public override IState PreviousState

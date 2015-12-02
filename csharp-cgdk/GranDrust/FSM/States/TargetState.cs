@@ -16,10 +16,18 @@ namespace GranDrust.FSM.States
                 return;
             }
 
+
+            if (vehicle.Self.EnginePower > 0.93D && vehicle.Self.SpeedModule() < 0.1D && vehicle.World.Tick -3 > vehicle.Game.InitialFreezeDurationTicks )
+            {
+                vehicle.ChangeState(Reversal.Instance);
+                return;
+            }
+
+
             var distance = vehicle.Self.GetDistanceTo(TargetPoint);
             
             //TODO: fix choose path can stay in the same tile
-            if (vehicle.InTheSameTile(TargetPoint) //&& vehicle.Self.EnginePower > 0.2D
+            if (vehicle.InTheSameTile(TargetPoint)
                     || (distance <= MovementHelper.GetDistance(vehicle.Self.NextPoint(), TargetPoint)))
             {
                 vehicle.ChangeState(Seek.Instance);

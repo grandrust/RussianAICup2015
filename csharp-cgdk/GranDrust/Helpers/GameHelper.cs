@@ -1,6 +1,7 @@
 ﻿using System;
 using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
 using GranDrust.GameEntities;
+using GranDrust.Search;
 
 // ReSharper disable once CheckNamespace
 namespace GranDrust.Helpers
@@ -28,9 +29,26 @@ namespace GranDrust.Helpers
             return vehicle.World.TilesXY[x][y];
         }
 
+        public static BFSearch.Cell GetCellByIndex(this Vehicle vehicle, int index)
+        {
+            index = index % vehicle.World.Waypoints.Length;
+            var point = vehicle.World.Waypoints[index];
+
+            return new BFSearch.Cell(point[0], point[1]);
+        }
+
+        public static BFSearch.Cell GetCurrentCell(this Vehicle vehicle, Point currentPoint)
+        {
+            var x = GetTileIndex(currentPoint.X, vehicle.Game.TrackTileSize);
+            var y = GetTileIndex(currentPoint.Y, vehicle.Game.TrackTileSize);
+
+            return new BFSearch.Cell(x, y);
+        }
+
         public static bool InTheSameTile(this Vehicle vehicle, Point point)
         {
-            var currentPoint = vehicle.Self.CurrentPoint();//vehicle.NosePoint();
+            var currentPoint = vehicle.NosePoint();//vehicle.Self.CurrentPoint();
+
             var x = GetTileIndex(currentPoint.X, vehicle.Game.TrackTileSize);
             var y = GetTileIndex(currentPoint.Y, vehicle.Game.TrackTileSize);
             var pointX = GetTileIndex(point.X, vehicle.Game.TrackTileSize);

@@ -1,5 +1,6 @@
 ﻿using System;
 using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
+using GranDrust.Search;
 
 // ReSharper disable once CheckNamespace
 namespace GranDrust.Helpers
@@ -43,6 +44,16 @@ namespace GranDrust.Helpers
         public static Point CurrentPoint(this Car car)
         {
             return new Point(car.X, car.Y);
+        }
+
+        public static bool IsOnLine(BFSearch.Cell startCell, BFSearch.Cell cell, BFSearch.Cell cell1, BFSearch.Cell cell2)
+        {
+            return startCell.X - cell.X == cell1.X - cell2.X && startCell.Y - cell.Y == cell1.Y - cell2.Y;
+        }
+
+        public static bool IsOnLine(BFSearch.Cell startCell, BFSearch.Cell cell)
+        {
+            return Math.Abs(startCell.X - cell.X) - Math.Abs(startCell.Y - cell.Y) == 0;
         }
     }
 }

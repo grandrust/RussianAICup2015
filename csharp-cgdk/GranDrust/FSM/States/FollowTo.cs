@@ -28,6 +28,10 @@ namespace GranDrust.FSM.States
             {
                 vehicle.Move.IsBrake = true;
             }
+
+            vehicle.Move.IsUseNitro = vehicle.CanUseNitro
+                                       && vehicle.Game.InitialFreezeDurationTicks < vehicle.World.Tick - 100
+                                       && Math.Abs(vehicle.Self.GetAngleTo(TargetPoint)) < 0.5D;
         }
     }
 }

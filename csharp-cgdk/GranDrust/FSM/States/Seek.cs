@@ -45,9 +45,7 @@ namespace GranDrust.FSM.States
             _state = vehicle.NextTile() != vehicle.CurrentTile() //TODO: not true for T and crossroad use distance and angle
                 ? (ITargetState)Arrive.Instance
                 : FollowTo.Instance;
-
-            //_state = Arrive.Instance;
-
+            
             _state.TargetPoint = _target;
             _state.Execute(vehicle);
         }
@@ -70,10 +68,17 @@ namespace GranDrust.FSM.States
             {
                 var excludeCell = vehicle.GetCurrentCell(new Point(nextWaypointX, nextWaypointY));
 
-                var routeNoBackPoint = vehicle.CreateRouteOf(10, currentPoint, excludeCell); // TODO: in same cases back point should be included
+                var routeNoBackPoint = vehicle.CreateRouteOf(30, currentPoint, excludeCell); // TODO: in some cases back point should be included
 
-                nextWaypointX = (routeNoBackPoint[0].X + 0.5D) * vehicle.Game.TrackTileSize;
-                nextWaypointY = (routeNoBackPoint[0].Y + 0.5D) * vehicle.Game.TrackTileSize;
+                var nextCell = vehicle.GetCellByIndex(vehicle.Self.NextWaypointIndex+1);
+
+                if (routeNoBackPoint.IndexOf(nextCell) - route.IndexOf(nextCell) < 5)
+                {
+                    nextWaypointX = (routeNoBackPoint[0].X + 0.5D)*vehicle.Game.TrackTileSize;
+                    nextWaypointY = (routeNoBackPoint[0].Y + 0.5D)*vehicle.Game.TrackTileSize;
+
+                    route = routeNoBackPoint;
+                }
             }
 
             var addOn = vehicle.Game.TrackTileSize * 0.4D;
@@ -85,12 +90,18 @@ namespace GranDrust.FSM.States
             bottom = 0.0D;
 
             var startCell = vehicle.GetCurrentCell(currentPoint);
+            var prevCell = vehicle.GetCurrentCell(vehicle.Self.CurrentPoint());
 
-            if (IsOnLine(startCell, route[0], route[1], route[2]))
+            if (MovementHelper.IsOnLine(prevCell, startCell, route[0], route[1]))
             {
                 nextWaypointX = (route[0].X + 0.5D) * vehicle.Game.TrackTileSize;
                 nextWaypointY = (route[0].Y + 0.5D) * vehicle.Game.TrackTileSize;
                 NextWaypointApdate(route[1], route[0], 0.49 * vehicle.Game.TrackTileSize);
+
+                //TODO: Move nitro in other place
+                vehicle.CanUseNitro = MovementHelper.IsOnLine(prevCell, startCell, route[2], route[3]) &&
+                                      MovementHelper.IsOnLine(prevCell, startCell, route[4], route[5]) &&
+                                      MovementHelper.IsOnLine(prevCell, startCell, route[6], route[7]);
 
                 return OptimalPoint(nextWaypointX, nextWaypointY);
             }
@@ -100,16 +111,6 @@ namespace GranDrust.FSM.States
             NextWaypointApdate(route[1], route[0], addOn);
 
             return OptimalPoint(nextWaypointX, nextWaypointY);
-        }
-
-        private bool IsOnLine(BFSearch.Cell startCell, BFSearch.Cell cell, BFSearch.Cell cell1, BFSearch.Cell cell2)
-        {
-            return startCell.X - cell.X == cell1.X - cell2.X && startCell.Y - cell.Y == cell1.Y - cell2.Y;
-        }
-
-        private bool IsOnLine(BFSearch.Cell startCell, BFSearch.Cell cell)
-        {
-            return Math.Abs(startCell.X - cell.X) - Math.Abs(startCell.Y - cell.Y) == 0;
         }
 
         private Point OptimalPoint(double nextWaypointX, double nextWaypointY)

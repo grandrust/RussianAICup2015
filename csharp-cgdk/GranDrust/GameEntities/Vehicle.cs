@@ -27,6 +27,7 @@ namespace GranDrust.GameEntities
 
         public virtual IState CurrentState { get; protected set; }
         public virtual IState PreviousState { get; protected set; }
+        public bool CanUseNitro { get; set; }
 
         public void ChangeState(IState state)
         {

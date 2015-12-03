@@ -51,9 +51,11 @@ namespace GranDrust.FSM.States
             vehicle.Move.IsSpillOil = vehicle.CurrentTile() != TileType.Horizontal &&
                                       vehicle.CurrentTile() != TileType.Vertical;
 
-            vehicle.Strike();
+            vehicle.Move.IsUseNitro = vehicle.CanUseNitro
+                                        && vehicle.Game.InitialFreezeDurationTicks < vehicle.World.Tick - 100
+                                        && Math.Abs(vehicle.Self.GetAngleTo(TargetPoint)) < 0.5D;
 
-            vehicle.Move.IsUseNitro = vehicle.Game.InitialFreezeDurationTicks < vehicle.World.Tick + 100;
+            vehicle.Strike();
         }
 
         private double AngleToNextPoint(Point target, Vehicle vehicle) //TODO: Find another way

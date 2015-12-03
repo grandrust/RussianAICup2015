@@ -72,7 +72,7 @@ namespace GranDrust.FSM.States
 
                 var nextCell = vehicle.GetCellByIndex(vehicle.Self.NextWaypointIndex+1);
 
-                if (routeNoBackPoint.IndexOf(nextCell) - route.IndexOf(nextCell) < 5)
+                if (routeNoBackPoint.IndexOf(nextCell) - route.IndexOf(nextCell) < 8)
                 {
                     nextWaypointX = (routeNoBackPoint[0].X + 0.5D)*vehicle.Game.TrackTileSize;
                     nextWaypointY = (routeNoBackPoint[0].Y + 0.5D)*vehicle.Game.TrackTileSize;
@@ -100,8 +100,8 @@ namespace GranDrust.FSM.States
 
                 //TODO: Move nitro in other place
                 vehicle.CanUseNitro = MovementHelper.IsOnLine(prevCell, startCell, route[2], route[3]) &&
-                                      MovementHelper.IsOnLine(prevCell, startCell, route[4], route[5]) &&
-                                      MovementHelper.IsOnLine(prevCell, startCell, route[6], route[7]);
+                                      MovementHelper.IsOnLine(prevCell, startCell, route[4], route[5]);// &&
+                                     // MovementHelper.IsOnLine(prevCell, startCell, route[6], route[7]);
 
                 return OptimalPoint(nextWaypointX, nextWaypointY);
             }

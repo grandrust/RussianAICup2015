@@ -34,7 +34,8 @@ namespace GranDrust.GameEntities
 
                 var angel = Self.GetAngleTo(car.NextPoint());
 
-                Move.IsThrowProjectile = Math.Abs(angel) < 0.08D;
+                if (Math.Abs(angel) < 0.08D)
+                    Move.IsThrowProjectile = Self.GetDistanceTo(car)/Game.TrackTileSize < 6.3;
             }
         }
 

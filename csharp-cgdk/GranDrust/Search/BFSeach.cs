@@ -254,6 +254,10 @@ namespace GranDrust.Search
                 _queue.Add(newCell);
                 _parentIndexs.Add(index);
             }
+            if (newCell.Equals(_excludeCell))
+            {
+                _queue[0] = new Cell(-1,-1);
+            }
         }
 
         private bool CanAddCell(Cell newCell)

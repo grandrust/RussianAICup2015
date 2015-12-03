@@ -43,15 +43,17 @@ namespace GranDrust.FSM.States
 
             if (Math.Abs(Math.Cos(angleToWaypoint)) * speedModule > speed)  //TODO: consistent brake
             {
-                 vehicle.Move.IsBrake = true;
+                vehicle.Move.IsBrake = true;
             }
 
-            
+
             //STARIKE ACTION
             vehicle.Move.IsSpillOil = vehicle.CurrentTile() != TileType.Horizontal &&
                                       vehicle.CurrentTile() != TileType.Vertical;
 
             vehicle.Strike();
+
+            vehicle.Move.IsUseNitro = vehicle.Game.InitialFreezeDurationTicks < vehicle.World.Tick + 100;
         }
 
         private double AngleToNextPoint(Point target, Vehicle vehicle) //TODO: Find another way

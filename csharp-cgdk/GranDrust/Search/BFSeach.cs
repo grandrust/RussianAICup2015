@@ -54,10 +54,17 @@ namespace GranDrust.Search
         private readonly Cell _terminatePoint;
         private readonly Cell _startPoint;
 
+        private Cell _excludeCell;
+
         private readonly int _gridWidth;
         private readonly int _gridHeight;
         
         private readonly Vehicle _vehicle;
+
+        private int StartIndex
+        {
+            get { return _excludeCell == null ? 0 : 1; }
+        }
 
         public BFSearch(Vehicle vehicle, Cell start, Cell terminate)
         {
@@ -69,20 +76,30 @@ namespace GranDrust.Search
             _gridHeight = vehicle.World.Height;
         }
 
-        public IList<Cell> Search(int limit = 400)
+        public IList<Cell> Search(int limit = 400, Cell excludeCell = null)
         {
             var searchLimit = limit;
+            _excludeCell = excludeCell;
 
             var current = _startPoint;
-            var index = 0;
+            var index = StartIndex;
 
-            _queue = new List<Cell> { current };
-            _parentIndexs = new List<int> { index };
+            _queue = index > 0 
+                        ? new List<Cell> { _excludeCell, current } 
+                        : new List<Cell> { current };
+
+            _parentIndexs = index > 0
+                ? new List<int> {0, index}
+                : new List<int> {index};
 
             var carCenter = _vehicle.Self.CurrentPoint();
             var nosePoint = _vehicle.NosePoint();
             var isRight = carCenter.X - nosePoint.X < 0.0D;
             var isBottom = carCenter.Y - nosePoint.Y < 0.0D;
+
+            if (_terminatePoint.Equals(new Cell(1,3)))
+                Console.WriteLine();
+
 
             while (!current.Equals(_terminatePoint) && index < searchLimit)
             {
@@ -218,9 +235,9 @@ namespace GranDrust.Search
         private IList<Cell> CreateRoute(int indx)
         {
             var route = new List<Cell>();
-            var index = (indx > 0 && indx < _queue.Count) ? indx : _queue.Count - 1;
+            var index = (indx > StartIndex && indx < _queue.Count) ? indx : _queue.Count - 1;
 
-            while (index > 0)
+            while (index > StartIndex)
             {
                 route.Add(_queue[index]);
                 index = _parentIndexs[index];

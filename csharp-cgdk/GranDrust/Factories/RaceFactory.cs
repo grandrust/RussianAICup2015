@@ -11,7 +11,7 @@ namespace GranDrust.Factories
             switch (car.Type)
             {
                 case CarType.Buggy:
-                    return new Jeep(car, world, game, move);
+                    return new Buggy(car, world, game, move);
                 case CarType.Jeep:
                     return new Jeep(car, world, game, move);
                 default:

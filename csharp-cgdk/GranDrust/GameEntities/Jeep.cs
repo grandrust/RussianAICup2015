@@ -58,14 +58,15 @@ namespace GranDrust.GameEntities
 
                 var cell = this.GetCurrentCell(new Point(nx, ny));
 
-                var currentIndex = route.IndexOf(cell);  //TODO: check
+                var currentIndex = route.IndexOf(cell); 
+
                 if (currentIndex == -1 && !startCell.Equals(cell))
                 {
                     result = false;
                     break;
                 }
 
-                if (index - currentIndex > 1)
+                if (currentIndex - index > 1)
                 {
                     result = false;
                     break;

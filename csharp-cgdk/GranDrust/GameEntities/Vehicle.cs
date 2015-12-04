@@ -1,6 +1,7 @@
 using System;
 using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
 using GranDrust.FSM.States;
+using GranDrust.Helpers;
 
 // ReSharper disable once CheckNamespace
 namespace GranDrust.GameEntities
@@ -49,7 +50,7 @@ namespace GranDrust.GameEntities
             {
                 if (car.IsTeammate) continue;
 
-                var angel = Self.GetAngleTo(car);
+                var angel = Self.GetAngleTo(car.NextPoint());
 
                 Move.IsThrowProjectile = Math.Abs(angel) < 0.08D;
             }

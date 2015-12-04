@@ -80,7 +80,7 @@
     <Compile Include="GranDrust\FSM\States\Stop.cs" />
     <Compile Include="GranDrust\FSM\States\TargetState.cs" />
     <Compile Include="GranDrust\GameEntities\Jeep.cs" />
-    <Compile Include="GranDrust\GameEntities\Baggy.cs" />
+    <Compile Include="GranDrust\GameEntities\Buggy.cs" />
     <Compile Include="GranDrust\GameEntities\Map.cs" />
     <Compile Include="GranDrust\GameEntities\Vehicle.cs" />
     <Compile Include="GranDrust\Helpers\GameHelper.cs" />

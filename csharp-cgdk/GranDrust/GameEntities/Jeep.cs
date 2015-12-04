@@ -2,11 +2,12 @@
 using Com.CodeGame.CodeRacing2015.DevKit.CSharpCgdk.Model;
 using GranDrust.FSM.States;
 using GranDrust.Helpers;
+using GranDrust.Search;
 
 // ReSharper disable once CheckNamespace
 namespace GranDrust.GameEntities
 {
-    public class Jeep: Vehicle
+    public class Jeep : Vehicle
     {
         private static Map _map;
         private static Map GetMap(Jeep vehicle)
@@ -20,7 +21,7 @@ namespace GranDrust.GameEntities
             return _map;
         }
 
-        public Jeep(Car self, World world, Game game, Move move) 
+        public Jeep(Car self, World world, Game game, Move move)
             : base(self, world, game, move)
         {
             Map = GetMap(this);
@@ -32,11 +33,48 @@ namespace GranDrust.GameEntities
             {
                 if (car.IsTeammate) continue;
 
-                var angel = Self.GetAngleTo(car.NextPoint());
+                var angle = Self.GetAngleTo(car.NextPoint());
+                var distanceTo = Self.GetDistanceTo(car);
 
-                if (Math.Abs(angel) < 0.08D)
-                    Move.IsThrowProjectile = Self.GetDistanceTo(car)/Game.TrackTileSize < 6.3;
+                if (Math.Abs(angle) < 0.08D && distanceTo / Game.TrackTileSize < 5.0D)
+                    Move.IsThrowProjectile = ThereIsNoObstaclesForThrow(angle + Self.Angle, distanceTo, car.CurrentPoint());
             }
+        }
+
+        private bool ThereIsNoObstaclesForThrow(double angle, double distanceTo, Point carPoint)
+        {
+            bool result = true;
+            var stepLength = Game.TrackTileMargin*1.5D;
+            var steps = Convert.ToInt32(Math.Floor(distanceTo /stepLength));
+            var startCell = this.GetCurrentCell(Self.CurrentPoint());
+
+            var route = new BFSearch(this, startCell, this.GetCurrentCell(carPoint)).Search();
+            var index = 0;
+
+            for (var i = 0; i < steps; i ++)
+            {
+                var nx = Self.X + (i + 1) * stepLength * Math.Cos(angle);
+                var ny = Self.Y + (i + 1) * stepLength * Math.Sin(angle);
+
+                var cell = this.GetCurrentCell(new Point(nx, ny));
+
+                var currentIndex = route.IndexOf(cell);  //TODO: check
+                if (currentIndex == -1 && !startCell.Equals(cell))
+                {
+                    result = false;
+                    break;
+                }
+
+                if (index - currentIndex > 1)
+                {
+                    result = false;
+                    break;
+                }
+
+                index = currentIndex;
+            }
+
+            return result;
         }
 
 

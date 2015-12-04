@@ -29,15 +29,6 @@ namespace GranDrust.FSM.States
         public override void Enter(Vehicle vehicle)
         {
             _target = Find(vehicle);
-
-            var previousState = vehicle.PreviousState as ITargetState;
-            if (previousState != null)
-            {
-                if (_target == previousState.TargetPoint)
-                {
-                    _target = Find(vehicle); //vehicle.Map.GetNextPoint(vehicle.Self.NextWaypointIndex + 1);
-                }
-            }
         }
 
         public override void Execute(Vehicle vehicle)
@@ -58,21 +49,20 @@ namespace GranDrust.FSM.States
         private Point Find(Vehicle vehicle)
         {
             var currentPoint = GetStartPoint(vehicle);
-            var route = vehicle.CreateRouteOf(10, currentPoint);
+            var route = vehicle.CreateRouteOf(30, currentPoint);
             
             double nextWaypointX = (route[0].X + 0.5D) * vehicle.Game.TrackTileSize;
             double nextWaypointY = (route[0].Y + 0.5D) * vehicle.Game.TrackTileSize;
 
-            //TODO: check speed or <b>reduce route length</b>
-            if (Math.Abs(vehicle.Self.GetAngleTo(nextWaypointX, nextWaypointY)) > Math.PI/1.4)
+            if (Math.Abs(vehicle.Self.GetAngleTo(nextWaypointX, nextWaypointY)) > Math.PI/1.57)
             {
                 var excludeCell = vehicle.GetCurrentCell(new Point(nextWaypointX, nextWaypointY));
 
-                var routeNoBackPoint = vehicle.CreateRouteOf(30, currentPoint, excludeCell); // TODO: in some cases back point should be included
+                var routeNoBackPoint = vehicle.CreateRouteOf(30, currentPoint, excludeCell);
 
                 var nextCell = vehicle.GetCellByIndex(vehicle.Self.NextWaypointIndex+1);
 
-                if (routeNoBackPoint.IndexOf(nextCell) - route.IndexOf(nextCell) < 8)
+                if (routeNoBackPoint.IndexOf(nextCell) - route.IndexOf(nextCell) < 8) //TODO: speed check here
                 {
                     nextWaypointX = (routeNoBackPoint[0].X + 0.5D)*vehicle.Game.TrackTileSize;
                     nextWaypointY = (routeNoBackPoint[0].Y + 0.5D)*vehicle.Game.TrackTileSize;

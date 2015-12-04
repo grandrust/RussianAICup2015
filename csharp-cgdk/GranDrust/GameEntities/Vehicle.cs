@@ -13,7 +13,7 @@ namespace GranDrust.GameEntities
         public Game Game { get; private set; }
 
         public World World { get; private set; }
-        
+
         public Car Self { get; private set; }
 
         protected Vehicle(Car self, World world, Game game, Move move, Map map = null)
